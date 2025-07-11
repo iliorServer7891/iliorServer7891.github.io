@@ -1,0 +1,103 @@
+body {
+  background-color: var(--bg-color, #1a1b26);
+  color: var(--fg-color, #c0caf5);
+  font-family: 'Fira Code', monospace;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#terminal {
+  width: 800px;
+  height: 600px;
+  background-color: var(--bg-color, #24283b);
+  border: 2px solid var(--border-color, #414868);
+  border-radius: 8px;
+  padding: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 10px var(--shadow-color, rgba(0, 0, 0, 0.5));
+}
+
+#output {
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-y: auto;
+  height: calc(100% - 30px);
+  margin-bottom: 10px;
+}
+
+#input-line {
+  display: flex;
+  align-items: center;
+}
+
+#command-input {
+  background: none;
+  border: none;
+  color: var(--fg-color, #ffffff);
+  font-family: 'Fira Code', monospace;
+  font-size: 16px;
+  outline: none;
+  flex-grow: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.username {
+  color: var(--str-color, #9ece6a);
+}
+
+.hostname {
+  color: var(--num-color, #ff9e64);
+}
+
+.at {
+  color: var(--cmd-color, #7aa2f7);
+}
+
+.prompt {
+  color: var(--key-color, #bb9af7);
+}
+
+.ascii {
+  color: var(--str-color, #9ece6a);
+}
+
+.info {
+  color: var(--fg-color, #c0caf5);
+}
+
+.cmd {
+  color: var(--cmd-color, #7aa2f7);
+}
+
+.input {
+  color: var(--fg-color, #ffffff);
+}
+
+.input-line {
+  background: none;
+}
+
+#command-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--cmd-color, #7aa2f7);
+  color: var(--fg-color, #ffffff);
+  font-family: 'Fira Code', monospace;
+  font-size: 16px;
+  outline: none;
+  flex-grow: 1;
+  caret-color: var(--cmd-color, #7aa2f7);
+}
+
+a {
+  color: var(--cmd-color, #7aa2f7);
+  text-decoration: underline;
+  font-family: 'Fira Code', monospace;
+  }
