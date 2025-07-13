@@ -1,29 +1,317 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terminal adapter?</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bio frembl'a</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code|Roboto+Mono">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --fox-orange: #444;
+            --fox-brown: #444;
+            --fox-white: #ccc;
+            --menu-gradient: linear-gradient(135deg, #444 0%, #ccc 100%);
+            --arch-blue: #1793d1;
+            --arch-dark: #0a0a0a;
+            --arch-text: #d3d7cf;
+            --arch-green: #33cc33;
+            --python-string: #ce9178;
+            --gray-border: #666;
+            --github-gray: linear-gradient(135deg, #333 0%, #555 100%);
+            --github-gray-hover: linear-gradient(135deg, #444 0%, #666 100%);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #333 0%, #666 100%);
+            font-family: 'Fira Code', monospace;
+            color: var(--fox-white);
+        }
+
+        .container {
+            background: var(--menu-gradient);
+            border-radius: 15px;
+            padding: 2px;
+            margin: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards 6s;
+            width: calc(100% - 40px);
+            max-width: 800px;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .card {
+            padding: 1.5rem;
+            border-radius: 13px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .avatar-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--fox-brown);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        }
+
+        .username {
+            font-size: 1.8rem;
+            margin: 0 0 1.5rem;
+            color: var(--fox-brown);
+            font-family: 'Roboto Mono';
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .bio-info {
+            text-align: left;
+            margin: 0 0 1.5rem;
+            padding: 1.2rem;
+            background: var(--arch-dark);
+            border: 2px solid var(--gray-border);
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            color: var(--arch-text);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .bio-info::before {
+            content: '[*] frembl@arch ~ $ vim profile.py';
+            display: block;
+            color: var(--arch-blue);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .bio-item {
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .bio-item span.string {
+            color: var(--python-string);
+        }
+
+        .bio-item .comment-style {
+            color: var(--arch-green);
+        }
+
+        .links {
+            display: grid;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem;
+            border-radius: 50px;
+            background: var(--github-gray);
+            border: 1px solid var(--fox-brown);
+            color: var(--fox-white);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .link:hover {
+            background: var(--github-gray-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .link i {
+            margin-right: 0.7rem;
+            font-size: 1.1rem;
+        }
+
+        .logs {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--arch-dark);
+            padding: 1.2rem;
+            border: 2px solid var(--arch-blue);
+            border-radius: 8px;
+            color: var(--arch-text);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            width: 300px;
+            max-width: 90%;
+            opacity: 1;
+            animation: fadeOut 1s ease-out forwards 5s;
+        }
+
+        .logs p {
+            margin: 0.4rem 0;
+            opacity: 0;
+            animation: logAppear 0.5s ease-in forwards;
+        }
+
+        .logs p span.ok {
+            color: var(--arch-green);
+        }
+
+        .logs p:nth-child(1) { animation-delay: 0.5s; }
+        .logs p:nth-child(2) { animation-delay: 1.5s; }
+        .logs p:nth-child(3) { animation-delay: 2.5s; }
+        .logs p:nth-child(4) { animation-delay: 3.5s; }
+        .logs p:nth-child(5) { animation-delay: 4.5s; }
+
+        @keyframes logAppear {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }\
+        }
+
+        /* Desktop layout */
+        @media (min-width: 768px) {
+            .card {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 2rem;
+                padding: 2rem;
+            }
+            
+            .avatar-container {
+                width: auto;
+                margin: 0;
+                flex-shrink: 0;
+            }
+            
+            .avatar {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .username {
+                display: none;
+            }
+            
+            .profile-content {
+                flex: 1;
+                min-width: 0;
+                margin-top: 0;
+            }
+            
+            .bio-info {
+                margin-bottom: 1.5rem;
+                max-width: 100%;
+            }
+            
+            .now-playing {
+                max-width: 100%;
+                margin-bottom: 1.5rem;
+            }
+            
+            .bio-info::before {
+                content: '[*] frembl@arch ~ $ cat profile.json';
+            }
+            
+            .links {
+                grid-template-columns: 1fr 1fr;
+                margin-top: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div id="terminal">
-    <div id="output"></div>
-    <div id="input-line">
-      <input id="command-input" type="text" autocomplete="off">
+    <div class="logs">
+        <p><span class="ok">[ OK ]</span> hui</p>
+        <p><span class="ok">[ OK ]</span> пупупупу</p>
+        <p><span class="ok">[ OK ]</span> xz</p>
+        <p><span class="ok">[ OK ]</span> ыыыыыыы</p>
+        <p><span class="ok">[ OK ]</span> start!</p>
     </div>
-  </div>
-  <script src="static/scripts/localization.js"></script>
-  <script src="static/scripts/utils.js"></script>
-  <script src="static/scripts/setup.js"></script>
-  <script src="static/scripts/fastfetch.js"></script>
-  <script src="static/scripts/commands/help.js"></script>
-  <script src="static/scripts/commands/whoami.js"></script>
-  <script src="static/scripts/commands/clear.js"></script>
-  <script src="static/scripts/themes.js"></script>
-  <script src="static/scripts/commands/switch-lang.js"></script>
-  <script src="static/scripts/commands/switch-theme.js"></script>
-  <script src="static/scripts/main.js"></script>
+    <div class="container">
+        <div class="card"> 
+            <div class="avatar-container">
+                <img src="https://github.com/iliorServer7891/-/blob/d6f3a1b916db0296203ff321231fe82c433e27a6/ava.png" alt="pfp was stolen" class="avatar">
+            </div>
+            
+            <div class="profile-content">
+                <h1 class="username">.frembl</h1>
+                
+                <div class="bio-info">
+                    <div class="bio-item">{</div>
+                    <div class="bio-item">  <span class="string">"name"</span>: <span class="string">"Artem"</span>,</div>
+                    <div class="bio-item">  <span class="string">"gender"</span>: <span class="string">"Boy"</span>,</div>
+                    <div class="bio-item">  <span class="string">"location"</span>: <span class="string">"Russia"</span>,</div>
+                    <div class="bio-item">  <span class="string">"birthday"</span>: <span class="string">"14.04"</span>,</div>
+                    <div class="bio-item">  <span class="comment-style"># ыыы</span></div>
+                    <div class="bio-item">}</div>
+                </div>
+                
+                <div class="links">
+                    <a href="https://github.com/iliorServer7891" class="link">
+                        <i class="bi bi-github"></i> GitHub
+                    </a>
+                    <a href="https://frembl.t.me/" class="link">
+                        <i class="bi bi-telegram"></i> Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const originalTitle = "bio frembl'a";
+        let currentIndex = originalTitle.length;
+        let removing = true;
+
+        function animateTitle() {
+            if (removing) {
+                if (currentIndex > 0 && originalTitle[currentIndex - 1] !== ' ') {
+                    currentIndex--;
+                    document.title = originalTitle.substring(0, currentIndex);
+                } else {
+                    removing = false;
+                }
+            } else {
+                if (currentIndex < originalTitle.length) {
+                    currentIndex++;
+                    document.title = originalTitle.substring(0, currentIndex);
+                } else {
+                    removing = true;
+                    currentIndex = originalTitle.length; 
+                }
+            }
+        }
+
+        setInterval(animateTitle, 500);
+    </script>
 </body>
-</html>
+  </html>
