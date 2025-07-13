@@ -194,7 +194,7 @@
         }
 
         @keyframes fadeOut {
-            to { opacity: 0; }\
+            to { opacity: 0; }
         }
 
         /* Desktop layout */
@@ -294,7 +294,7 @@
 
         function animateTitle() {
             if (removing) {
-                if (currentIndex > 0 && originalTitle[currentIndex - 1] !== ' ') {
+                if (currentIndex > 0) {
                     currentIndex--;
                     document.title = originalTitle.substring(0, currentIndex);
                 } else {
@@ -314,4 +314,4 @@
         setInterval(animateTitle, 500);
     </script>
 </body>
-  </html>
+</html>
