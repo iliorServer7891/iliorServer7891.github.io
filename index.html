@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="frembl-bio">
+    <meta name="keywords" content="bio, био страница, личная страница, профиль">
+    <link rel="icon" href="https://raw.githubusercontent.com/iliorServer7891/-/refs/heads/main/ыыы.png" type="image/png">
+    <title>frembl-bio</title>
+    <style>
+        :root {
+            --border-radius: 10px;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-image: url("https://i.ibb.co/DDWv9rcR/1000043354.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: monospace;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: -1;
+        }
+        .content-container {
+            background-color: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid #666;
+            margin: 15px;
+            backdrop-filter: blur(10px);
+            width: 700px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease;
+            will-change: opacity, transform;
+            position: relative;
+            z-index: 2;
+            display: none;
+        }
+        .content-container.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: var(--border-radius);
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 1px solid #666;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .heading-with-emoji {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            min-height: 40px;
+        }
+        
+        .emoji-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            display: inline-block;
+        }
+        
+        h2 {
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 5px;
+            margin-top: 5px;
+            word-wrap: break-word;
+            animation: fadeIn 1s ease;
+            white-space: nowrap;
+        }
+        
+        p {
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+            white-space: pre-line;
+            word-wrap: break-word;
+            text-align: center;
+            animation: fadeIn 1.2s ease;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+        .counter-img {
+            margin-top: 15px;
+            opacity: 0.7;
+            display: inline-block;
+            width: 250px;
+            height: auto;
+            max-height: 56px;
+            border-radius: calc(var(--border-radius) / 2);
+        }
+        
+        .control-button {
+            position: fixed;
+            bottom: 20px;
+            cursor: pointer;
+            z-index: 100;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            outline: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .control-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+        .control-button:active {
+            transform: scale(0.95);
+        }
+        .control-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
+        }
+        .control-button.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.8);
+        }
+        .info-button {
+            left: 20px;
+        }
+        .enter-button {
+            right: 20px;
+        }
+        
+        .panel {
+            position: fixed;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #555;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 99;
+            opacity: 0;
+            height: auto;
+            min-width: 35px;
+        }
+        .panel.show {
+            opacity: 1;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .info-panel {
+            bottom: -200px;
+            left: 20px;
+            width: 260px;
+            min-height: 85px;
+            padding: 12px 15px;
+        }
+        .info-panel.show {
+            bottom: 70px;
+        }
+        .info-panel p {
+            margin: 0 0 10px 0;
+            text-align: left;
+            font-size: 12px;
+            color: #f0f0f0;
+        }
+        .info-panel a {
+            color: #f0f0f0;
+            text-decoration: none;
+        }
+        .info-panel a:hover {
+            text-decoration: underline;
+        }
+        
+        .animated-heading-wrapper {
+            display: inline-block;
+            position: relative;
+            height: 1.2em;
+            overflow: hidden;
+        }
+        .animated-letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.1s ease, transform 0.1s ease;
+        }
+        .animated-letter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .heart-animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: red;
+            opacity: 0;
+            animation: floatHeart 3s ease-out forwards;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) translateX(0) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+                transform: translateY(-20px) translateX(0) scale(1);
+            }
+            100% {
+                transform: translateY(-200px) translateX(var(--heart-x-offset, 0px)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeRotate {
+            0% { opacity: 0; transform: rotate(0deg); }
+            100% { opacity: 1; transform: rotate(360deg); }
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+        }
+        
+        .pulse { animation: pulse 2s ease infinite; }
+        .fade-rotate { animation: fadeRotate 1s ease; }
+        .slide-up { animation: slideUp 0.5s ease; }
+        .glow { animation: glow 2s ease infinite; }
+    
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            30% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(calc(43.82756964288555px));
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+            .content-container { 
+                width: 90%; 
+                padding: 15px;
+            }
+            body {
+                background-attachment: scroll;
+            }
+            .panel {
+                padding: 12px;
+            }
+            .info-panel {
+                width: 220px;
+                left: 15px;
+            }
+            .enter-button {
+                right: 15px;
+            }
+        }
+
+        .info-button:hover { 
+            background: rgba(255,255,255,0.1) !important;
+            transform: none !important;
+            border-color: rgba(255,255,255,0.3) !important;
+            animation: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container" id="bioContainer">
+        <img src="https://raw.githubusercontent.com/iliorServer7891/-/refs/heads/main/ava.png" class="avatar" loading="lazy">
+        <div class="heading-with-emoji">
+            <h2 id="animatedHeading" class="slide-up"></h2>
+        </div>
+        <p class="slide-up">
+Name:
+<em>Artem</em>
+
+Gender:
+<em>Boy</em>
+
+Location:
+<em>Russia</em>
+
+Birthday:
+<em>14.04</em>
+
+<em>больше я нихуя не придумал</em>
+
+Спизженно у whymakser.github.io
+        </p>
+        <img src="https://count.getloli.com/get/@kf2gc?theme=gb-dark" 
+            alt="Счетчик посещений" loading="lazy" class="counter-img" width="250">
+    </div>
+
+    <button class="control-button info-button pulse" onclick="toggleInfo()">
+        <svg viewBox="0 0 24 24">
+            <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+        </svg>
+    </button>
+
+    <button class="control-button enter-button pulse" onclick="toggleBio()">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+        </svg>
+    </button>
+
+    <div class="panel info-panel" id="infoPanel">
+        <p>
+            Telegram: <a href="https://frembl.t.me/" target="_blank">frembl</a><br>
+            Channel: <a href="https:// fremb1.t.me/" target="_blank">fremb1</a><br>
+            GitHub: <a href="https://github.com/iliorServer7891" target="_blank">ilior</a>
+        </p>
+    </div>
+
+    <script>
+        document.documentElement.style.setProperty('--border-radius', '10px');
+    
+        function togglePanel(panelId, closeOthers = true) {
+            const panel = document.getElementById(panelId);
+            panel.classList.toggle('show');
+            
+            if (closeOthers) {
+                const allPanels = document.querySelectorAll('.panel');
+                allPanels.forEach(p => {
+                    if (p.id !== panelId) {
+                        p.classList.remove('show');
+                    }
+                });
+            }
+            
+            if (panel.classList.contains('show')) {
+                setTimeout(() => {
+                    document.addEventListener('click', closePanelOutside);
+                }, 10);
+            } else {
+                document.removeEventListener('click', closePanelOutside);
+            }
+        }
+
+        function closePanelOutside(e) {
+            const panels = document.querySelectorAll('.panel');
+            panels.forEach(panel => {
+                const button = document.querySelector('.' + panel.id.replace('Panel', '-button'));
+                if (!panel.contains(e.target) && e.target !== button && !button.contains(e.target)) {
+                    panel.classList.remove('show');
+                }
+            });
+        }
+
+        function toggleInfo() {
+            togglePanel('infoPanel');
+        }
+
+        function toggleBio() {
+            const bioContainer = document.getElementById('bioContainer');
+            bioContainer.classList.toggle('active');
+        }
+
+        const originalHeadingText = "dd if=/dev/frembl to=/dev/null";
+        const animatedHeadingElement = document.getElementById('animatedHeading');
+        let currentHeading = originalHeadingText;
+        let animationInterval;
+        let heartInterval;
+
+        function updateHeadingDisplay() {
+            animatedHeadingElement.innerHTML = currentHeading.split('').map(letter => `<span class="animated-letter">${letter}</span>`).join('');
+            animatedHeadingElement.querySelectorAll('.animated-letter').forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.classList.add('visible');
+                }, index * 50);
+            });
+        }
+
+        function animateHeading() {
+            let direction = 'remove';
+            let charIndex = originalHeadingText.length;
+
+            animationInterval = setInterval(() => {
+                if (direction === 'remove') {
+                    if (charIndex > 0) {
+                        currentHeading = originalHeadingText.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        direction = 'add';
+                        clearInterval(animationInterval);
+                        const heartContainer = document.createElement('div');
+                        heartContainer.classList.add('heart-animation-container');
+                        document.body.appendChild(heartContainer);
+
+                        let heartCount = 0;
+                        heartInterval = setInterval(() => {
+                            if (heartCount < 10) {
+                                const heart = document.createElement('span');
+                                heart.classList.add('heart');
+                                heart.textContent = '♡';
+                                heart.style.left = `${Math.random() * 100}%`;
+                                heart.style.setProperty('--heart-x-offset', `${(Math.random() - 0.5) * 100}px`);
+                                heartContainer.appendChild(heart);
+                                heartCount++;
+                            } else {
+                                clearInterval(heartInterval);
+                                heartContainer.remove();
+                                setTimeout(() => {
+                                    direction = 'add';
+                                    charIndex = 0;
+                                    currentHeading = '';
+                                    animateHeading();	
+                                }, 1000);
+                            }
+                        }, 200);
+                    }
+                } else if (direction === 'add') {
+                    if (charIndex < originalHeadingText.length) {
+                        currentHeading = originalHeadingText.substring(0, charIndex + 1);
+                        charIndex++;
+                    } else {
+                        direction = 'remove';
+                        clearInterval(animationInterval);
+                        setTimeout(animateHeading, 2000);
+                    }
+                }
+                updateHeadingDisplay();
+            }, 150);
+        }
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                toggleBio();
+            }
+        });
+
+        window.onload = () => {
+            updateHeadingDisplay();
+            setTimeout(animateHeading, 2000);
+            const bioContainer = document.getElementById('bioContainer');
+            bioContainer.classList.add('active');
+        };
+    </script>
+</body>
+</html> 
