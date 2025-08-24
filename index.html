@@ -343,7 +343,7 @@
     <div class="content-container" id="bioContainer">
         <img src="https://raw.githubusercontent.com/iliorServer7891/-/refs/heads/main/ava.png" class="avatar" loading="lazy">
         <div class="heading-with-emoji">
-            <h2 id="animatedHeading" class="slide-up"></h2>
+            <h2 class="slide-up">dd if=/dev/frembl to=/dev/null</h2>
         </div>
         <p class="slide-up">
 Name:
@@ -362,7 +362,7 @@ Birthday:
 
 Спизженно у whymakser.github.io
         </p>
-        <img src="https://count.getloli.com/get/@kf2gc?theme=gb-dark" 
+        <img src="https://count.getloli.com/@frembl?theme=gb-dark&padding=10" 
             alt="Счетчик посещений" loading="lazy" class="counter-img" width="250">
     </div>
 
@@ -430,7 +430,6 @@ Birthday:
             bioContainer.classList.toggle('active');
         }
 
-        // New animated header logic
         const originalHeadingText = "dd if=/dev/frembl to=/dev/null";
         const animatedHeadingElement = document.getElementById('animatedHeading');
         let currentHeading = originalHeadingText;
@@ -447,7 +446,7 @@ Birthday:
         }
 
         function animateHeading() {
-            let direction = 'remove'; // Start by removing
+            let direction = 'remove';
             let charIndex = originalHeadingText.length;
 
             animationInterval = setInterval(() => {
@@ -458,7 +457,6 @@ Birthday:
                     } else {
                         direction = 'add';
                         clearInterval(animationInterval);
-                        // Start heart animation
                         const heartContainer = document.createElement('div');
                         heartContainer.classList.add('heart-animation-container');
                         document.body.appendChild(heartContainer);
